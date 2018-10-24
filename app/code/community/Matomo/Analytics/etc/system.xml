@@ -2,19 +2,18 @@
 <!--
 /**
  *
- * Piwik Extension for Magento created by Adrian Speyer
- * Get Piwik at http://www.piwik.org - Open source web analytics
+ * Based on Piwik Extension for Magento created by Adrian Speyer
  *
- * @category    PiwikMage
- * @package     PiwikMage_PiwikAnalytics
- * @copyright   Copyright (c) 2012 Adrian Speyer. (http://www.adrianspeyer.com)
+ * @category    Matomo
+ * @package     Matomo_Analytics
+ * @copyright   Copyright (c) 2018 Thiago Contardi.
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
 -->
 <config>
     <sections>
-        <piwik translate="label" module="piwikanalytics">
+        <matomo translate="label" module="matomoanalytics">
             <label>Piwik Analytics Control</label>
             <tab>sales</tab>
             <frontend_type>text</frontend_type>
@@ -40,7 +39,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </active>
-
                         <install translate="label">
                             <label>Install Path</label>
                             <comment>i.e. http://www.example.com/piwik/</comment>
@@ -50,8 +48,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </install>
-
-
                         <site translate="label">
                             <label>Site Id</label>
                             <comment>Default is 1</comment>
@@ -61,9 +57,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </site>
-
-
-                        <pwtoken translate="label">
+                        <token translate="label">
                             <label>Piwik Auth Token</label>
                             <comment>Find in your API Tab of Piwik Install</comment>
                             <frontend_type>text</frontend_type>
@@ -71,12 +65,10 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </pwtoken>
-
-
+                        </token>
                     </fields>
                 </analytics>
             </groups>
-        </piwik>
+        </matomo>
     </sections>
 </config>

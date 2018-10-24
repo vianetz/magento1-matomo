@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ *
+ * Based on Piwik Extension for Magento created by Adrian Speyer
+ *
+ * @category    Matomo
+ * @package     Matomo_Analytics
+ * @copyright   Copyright (c) 2018 Thiago Contardi.
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ *
+ */
+-->
+<layout version="0.1.0">
+    <default>
+        <reference name="before_body_end">
+            <block type="matomoanalytics/script"
+                   name="matomo_script"
+                   as="matomo.script"
+                   template="matomoanalytics/script.phtml"/>
+        </reference>
+    </default>
+</layout>
