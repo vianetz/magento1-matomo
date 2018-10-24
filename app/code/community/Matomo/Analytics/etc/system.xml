@@ -14,7 +14,7 @@
 <config>
     <sections>
         <matomo translate="label" module="matomoanalytics">
-            <label>Piwik Analytics Control</label>
+            <label>Matomo Analytics</label>
             <tab>sales</tab>
             <frontend_type>text</frontend_type>
             <sort_order>350</sort_order>
@@ -23,7 +23,7 @@
             <show_in_store>1</show_in_store>
             <groups>
                 <analytics translate="label">
-                    <label>Piwik Analytics</label>
+                    <label>Matomo Analytics</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>10</sort_order>
                     <show_in_default>1</show_in_default>
@@ -41,7 +41,7 @@
                         </active>
                         <install translate="label">
                             <label>Install Path</label>
-                            <comment>i.e. http://www.example.com/piwik/</comment>
+                            <comment>i.e. http://www.example.com/matomo/</comment>
                             <frontend_type>text</frontend_type>
                             <sort_order>20</sort_order>
                             <show_in_default>1</show_in_default>
@@ -58,8 +58,8 @@
                             <show_in_store>1</show_in_store>
                         </site>
                         <token translate="label">
-                            <label>Piwik Auth Token</label>
-                            <comment>Find in your API Tab of Piwik Install</comment>
+                            <label>Matomo Auth Token</label>
+                            <comment>Find in your API Tab of Matomo Install</comment>
                             <frontend_type>text</frontend_type>
                             <sort_order>40</sort_order>
                             <show_in_default>1</show_in_default>
