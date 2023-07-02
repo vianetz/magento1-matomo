@@ -1,5 +1,5 @@
 {
-  "name": "vianetz/magento1-matomo",
+  "name": "vianetz/matomo-magento1",
   "type": "magento-module",
   "license": "GPL-3.0-or-later",
   "description": "A Magento 1 extension that allows you to get ecommerce transaction data into Matomo analytics.",
@@ -18,7 +18,7 @@
     },
     {
       "name": "Christoph Massmann",
-      "email": "c.massmann@vianetz.com",
+      "email": "cm@vianetz.com",
       "homepage": "https://www.vianetz.com",
       "role": "Developer"
     }
