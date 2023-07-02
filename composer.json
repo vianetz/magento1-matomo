@@ -1,12 +1,32 @@
 {
-  "name": "contardi/matomo-magento",
+  "name": "vianetz/matomo-magento1",
   "type": "magento-module",
-  "license": "GPL-3.0",
-  "description": "This is a GPL released Extension that allows you to get your Magento Ecommerce Transaction data in your Matomo install, based on Adrian Spencer Module",
+  "license": "GPL-3.0-or-later",
+  "description": "A Magento 1 extension that allows you to get ecommerce transaction data into Matomo analytics.",
+  "require-dev": {
+    "roave/security-advisories": "dev-master",
+    "magento/marketplace-eqp": ">=4.0"
+  },
   "authors": [
+    {
+      "name": "Adrian Speyer",
+      "email": "adrian@adrianspeyer.com"
+    },
     {
       "name": "Thiago Contardi",
       "email": "thiago@contardi.com.br"
+    },
+    {
+      "name": "Christoph Massmann",
+      "email": "cm@vianetz.com",
+      "homepage": "https://www.vianetz.com",
+      "role": "Developer"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://repo.magento.com/"
     }
   ]
 }

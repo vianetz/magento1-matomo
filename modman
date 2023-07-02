@@ -1,0 +1,6 @@
+app/code/community/Matomo/Analytics                             app/code/community/Matomo/Analytics
+app/etc/modules/Matomo_Analytics.xml                            app/etc/modules/Matomo_Analytics.xml
+app/design/frontend/base/default/template/matomoanalytics       app/design/frontend/base/default/template/matomoanalytics
+app/design/frontend/base/default/layout/matomoanalytics.xml     app/design/frontend/base/default/layout/matomoanalytics.xml
+app/locale/en_US/Matomo_Analytics.csv                           app/locale/en_US/Matomo_Analytics.csv
+app/locale/pt_BR/Matomo_Analytics.csv                           app/locale/pt_BR/Matomo_Analytics.csv

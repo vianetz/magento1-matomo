@@ -10,7 +10,6 @@
  *
  */
 
-
 class Matomo_Analytics_Model_Observer
 {
     /**
@@ -27,7 +26,7 @@ class Matomo_Analytics_Model_Observer
                 return;
             }
 
-            $block = Mage::app()->getFrontController()->getAction()->getLayout()->getBlock('matomo.scripts');
+            $block = Mage::app()->getFrontController()->getAction()->getLayout()->getBlock('matomo_script');
             if ($block) {
                 $block->setOrderIds($orderIds);
             }
