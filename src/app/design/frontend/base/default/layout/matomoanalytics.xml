@@ -14,10 +14,7 @@
 <layout version="0.1.0">
     <default>
         <reference name="before_body_end">
-            <block type="matomoanalytics/script"
-                   name="matomo_script"
-                   as="matomo.script"
-                   template="matomoanalytics/script.phtml"/>
+            <block type="matomoanalytics/script" name="matomo_script" as="matomo.script" template="matomoanalytics/script.phtml"/>
         </reference>
     </default>
 </layout>

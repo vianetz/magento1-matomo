@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  *
  * Based on Piwik Extension for Magento created by Adrian Speyer
@@ -10,25 +12,19 @@
  *
  */
 
-
-class Matomo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
+final class Matomo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
 {
-    /**
-     * Config paths for using throughout the code
-     */
     const XML_PATH_ACTIVE = 'matomo/analytics/active';
     const XML_PATH_SITE = 'matomo/analytics/site';
     const XML_PATH_INSTALL = 'matomo/analytics/install';
     const XML_PATH_TOKEN = 'matomo/analytics/token';
 
     /**
-     *
      * @param mixed $store
-     * @return bool
      */
-    public function isEnabled($store = null)
+    public function isEnabled($store = null): bool
     {
-        $siteId = Mage::getStoreConfig(self::XML_PATH_SITE, $store);
-        return $siteId && Mage::getStoreConfigFlag(self::XML_PATH_ACTIVE, $store);
+        return Mage::getStoreConfig(self::XML_PATH_SITE, $store)
+            && Mage::getStoreConfigFlag(self::XML_PATH_ACTIVE, $store);
     }
 }

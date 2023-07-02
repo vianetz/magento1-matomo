@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  *
  * Based on Piwik Extension for Magento created by Adrian Speyer
@@ -10,27 +12,25 @@
  *
  */
 
-class Matomo_Analytics_Block_Script extends Mage_Core_Block_Template
+final class Matomo_Analytics_Block_Script extends Mage_Core_Block_Template
 {
     /**
-     * Get a specific page name (may be customized via layout)
-     *
-     * @return string|null
+     * Get a specific page name (maybe customized via layout)
      */
-    public function getPageName()
+    public function getPageName(): ?string
     {
         return $this->_getData('page_name');
     }
 
     /**
      * Render information about specified orders and their items
-     * http://piwik.org/docs/ecommerce-analytics/
+     * @see https://matomo.org/guide/reports/ecommerce/
      */
-    public function getOrdersTrackingCode()
+    public function getOrdersTrackingCode(): string
     {
         $orderIds = $this->getOrderIds();
         if (empty($orderIds) || !is_array($orderIds)) {
-            return;
+            return '';
         }
 
         /** @var Mage_Sales_Model_Resource_Order_Collection $collection */
@@ -91,9 +91,9 @@ class Matomo_Analytics_Block_Script extends Mage_Core_Block_Template
 
     /**
      * Render information when cart updated
-     * http://piwik.org/docs/ecommerce-analytics/
+     * @see https://matomo.org/guide/reports/ecommerce/
      */
-    public function getEcommerceCartUpdate()
+    public function getEcommerceCartUpdate(): string
     {
         $result = array();
 
@@ -146,15 +146,14 @@ class Matomo_Analytics_Block_Script extends Mage_Core_Block_Template
 
     /**
      * Render information when product page view
-     * http://piwik.org/docs/ecommerce-analytics/
+     * @see https://matomo.org/guide/reports/ecommerce/
      */
-    public function getProductPageview()
+    public function getProductPageview(): string
     {
         /** @var Mage_Catalog_Model_Product $product */
         $product = Mage::registry('current_product');
 
         if ($product instanceof Mage_Catalog_Model_Product) {
-
             $categoryName = '';
             $categoryIds = $product->getCategoryIds();
             if (!empty($categoryIds)) {
@@ -173,14 +172,15 @@ class Matomo_Analytics_Block_Script extends Mage_Core_Block_Template
                 $product->getFinalPrice()
             );
         }
+
         return '';
     }
 
     /**
      * Render information of category view
-     * http://piwik.org/docs/ecommerce-analytics/
+     * @see https://matomo.org/guide/reports/ecommerce/
      */
-    public function getCategoryPageview()
+    public function getCategoryPageview(): string
     {
         $currentCategory = Mage::registry('current_category');
 
@@ -191,16 +191,45 @@ class Matomo_Analytics_Block_Script extends Mage_Core_Block_Template
         return '';
     }
 
-    /**
-     * Render Piwik tracking scripts
-     *
-     * @return string
-     */
-    public function _toHtml()
+    public function getSiteId(): string
     {
-        if (!Mage::helper('matomoanalytics')->isEnabled()) {
+        return Mage::getStoreConfig(Matomo_Analytics_Helper_Data::XML_PATH_SITE);
+    }
+
+    public function getInstallPath(): string
+    {
+        $installPath = Mage::getStoreConfig(Matomo_Analytics_Helper_Data::XML_PATH_INSTALL);
+
+        // remove https or https
+        return preg_replace('/^https?:/', '', $installPath);
+    }
+
+    public function getSearchResultCount(): int
+    {
+        $count = 0;
+
+        if ($this->getRequest()->getControllerName() === 'result') {
+            $queryText = $this->helper('catalogsearch')->getQuery()->getQueryText();
+            $count = (int)$this->helper('catalogsearch')->getEngine()
+                ->getResultCollection()
+                ->addSearchFilter($queryText)
+                ->getSize();
+        }
+
+        return $count;
+    }
+
+    public function is404(): bool
+    {
+        return $this->getAction() === 'noRoute';
+    }
+
+    public function _toHtml(): string
+    {
+        if (! $this->helper('matomoanalytics')->isEnabled()) {
             return '';
         }
+
         return parent::_toHtml();
     }
 }
