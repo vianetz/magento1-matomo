@@ -2,14 +2,12 @@
 declare(strict_types=1);
 
 /**
- *
  * Based on Piwik Extension for Magento created by Adrian Speyer
  *
  * @category    Matomo
  * @package     Matomo_Analytics
  * @copyright   Copyright (c) 2018 Thiago Contardi.
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
  */
 
 final class Matomo_Analytics_Block_Script extends Mage_Core_Block_Template
@@ -59,7 +57,7 @@ final class Matomo_Analytics_Block_Script extends Mage_Core_Block_Template
                 }
 
                 if ($item->getQtyOrdered()) {
-                    $qty = number_format($item->getQtyOrdered(), 0, '.', '');
+                    $qty = number_format((float)$item->getQtyOrdered(), 0, '.', '');
                 } else {
                     $qty = '0';
                 }
