@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * Based on Piwik Extension for Magento created by Adrian Speyer
  *
  * @category    Matomo
@@ -8,25 +7,26 @@
  * @copyright   Copyright (c) 2018 Thiago Contardi.
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
+ * @see https://matomo.org/faq/reports/advanced-manually-tracking-ecommerce-actions-in-matomo/
+ * @see https://matomo.org/blog/2017/04/different-ways-embedding-piwik-tracking-code-faster-website-performance/
  */
 /** @var Matomo_Analytics_Block_Script $this */
 ?>
 <?php if (! $this->helper('core/cookie')->isUserNotAllowSaveCookie() && $this->getSiteId()): ?>
-    <!-- Matomo -->
-    <script>
+    <script nonce="<?= $this->getNonce() ?>">
         var _paq = window._paq = window._paq || [];
         (function () {
-            var u = "<?php echo $this->getInstallPath() ?>";
-            _paq.push(['setSiteId', <?php echo $this->getSiteId() ?>]);
+            var u = "<?= $this->getInstallPath() ?>";
+            _paq.push(['setSiteId', <?= $this->getSiteId() ?>]);
             _paq.push(['setTrackerUrl', u + 'matomo.php']);
 
-            <?php echo $this->getEcommerceCartUpdate() ?>
-            <?php echo $this->getOrdersTrackingCode() ?>
-            <?php echo $this->getProductPageview() ?>
-            <?php echo $this->getCategoryPageview() ?>
+            <?= $this->getEcommerceCartUpdate() ?>
+            <?= $this->getOrdersTrackingCode() ?>
+            <?= $this->getProductPageview() ?>
+            <?= $this->getCategoryPageview() ?>
 
             <?php if ($this->getSearchResultCount() > 0): ?>
-                _paq.push(['setCustomUrl', '' + document.URL + '&search_count=<?php echo $this->getSearchResultCount() ?>']);
+                _paq.push(['setCustomUrl', '' + document.URL + '&search_count=<?= $this->getSearchResultCount() ?>']);
             <?php endif ?>
 
             <?php if ($this->is404()): ?>
@@ -35,10 +35,19 @@
 
             _paq.push(['trackPageView']);
             _paq.push(['enableLinkTracking']);
-            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
-            g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+            function embedTrackingCode() {
+               var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
+               g.defer=true; g.async=true; g.src=u+"matomo.js"; s.parentNode.insertBefore(g,s);
+            }
+
+            if (window.addEventListener) {
+                window.addEventListener("load", embedTrackingCode, false);
+            } else if (window.attachEvent) {
+                window.attachEvent("onload", embedTrackingCode);
+            } else {
+                embedTrackingCode();
+            }
         })();
     </script>
-    <noscript><p><img src="<?php echo $this->getInstallPath() ?>matomo.php?idsite=<?php echo $this->getSiteId() ?>&rec=1" style="border:0" alt="" /></p></noscript>
-    <!-- End Matomo Code -->
+    <noscript><p><img src="<?= $this->getInstallPath() ?>matomo.php?idsite=<?= $this->getSiteId() ?>&rec=1" style="border:0" alt="" /></p></noscript>
 <?php endif ?>

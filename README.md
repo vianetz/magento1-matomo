@@ -3,11 +3,11 @@ Matomo Extension for Magento 1
 
 Facts
 -----
-- extension key: `Matomo_Analytics`
+- Extension key: `Matomo_Analytics`
 
 Description
 -----------
-This extension for Magento 1 adds the Matomo analytics tracking to your shop.
+This Extension for Magento 1 and OpenMage adds the Matomo analytics tracking to your shop.
 It is based on the original implementation by `adrianspeyer/Piwik-for-Magento`.
 
 Requirements

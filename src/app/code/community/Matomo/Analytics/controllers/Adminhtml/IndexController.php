@@ -49,6 +49,5 @@ class Matomo_Analytics_Adminhtml_IndexController
 
         $this->_addContent($block);
         $this->_setActiveMenu('matomo_menu')->renderLayout();
-
     }
 }
