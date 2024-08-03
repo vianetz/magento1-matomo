@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * Based on Piwik Extension for Magento created by Adrian Speyer
  *
  * @category    Matomo
@@ -8,70 +7,49 @@
  * @copyright   Copyright (c) 2018 Thiago Contardi.
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
+ * @see https://matomo.org/faq/reports/advanced-manually-tracking-ecommerce-actions-in-matomo/
+ * @see https://matomo.org/blog/2017/04/different-ways-embedding-piwik-tracking-code-faster-website-performance/
  */
 /** @var Matomo_Analytics_Block_Script $this */
 ?>
-<?php if (!Mage::helper('core/cookie')->isUserNotAllowSaveCookie()): ?>
+<?php if (! $this->helper('core/cookie')->isUserNotAllowSaveCookie() && $this->getSiteId()): ?>
+    <script nonce="<?= $this->getNonce() ?>">
+        var _paq = window._paq = window._paq || [];
+        (function () {
+            var u = "<?= $this->getInstallPath() ?>";
+            _paq.push(['setSiteId', <?= $this->getSiteId() ?>]);
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
 
-    <?php
-    $siteId = Mage::getStoreConfig(Matomo_Analytics_Helper_Data::XML_PATH_SITE);
-    $installPath = Mage::getStoreConfig(Matomo_Analytics_Helper_Data::XML_PATH_INSTALL);
-    $action = Mage::app()->getRequest()->getActionName();
+            <?php if ($this->getRequest()->getRouteName() === 'checkout'): ?>
+            <?= $this->getEcommerceCartUpdate() ?>
+            <?php endif ?>
+            <?= $this->getOrdersTrackingCode() ?>
+            <?= $this->getProductPageview() ?>
+            <?= $this->getCategoryPageview() ?>
 
-    if ($siteId): ?>
+            <?php if ($this->getSearchResultCount() > 0): ?>
+                _paq.push(['setCustomUrl', '' + document.URL + '&search_count=<?= $this->getSearchResultCount() ?>']);
+            <?php endif ?>
 
-        <?php
-        /*remove https or https*/
-        $installPath = preg_replace('/^https?:/', '', $installPath);
+            <?php if ($this->is404()): ?>
+                _paq.push(['setDocumentTitle', '404/URL = ' + String(document.location.pathname + document.location.search).replace(/\//g, "%2f") + '/From = ' + String(document.referrer).replace(/\//g, "%2f")]);
+            <?php endif ?>
 
-        // 0 Search Results
-        if ($this->getRequest()->getControllerName() == 'result') {
-            $queryText = Mage::helper('catalogsearch')->getQuery()->getQueryText();
-            $noRes = Mage::helper('catalogsearch')->getEngine()
-                ->getResultCollection()
-                ->addSearchFilter($queryText)
-                ->getSize();
-        }
-        ?>
+            _paq.push(['trackPageView']);
+            _paq.push(['enableLinkTracking']);
+            function embedTrackingCode() {
+               var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
+               g.defer=true; g.async=true; g.src=u+"matomo.js"; s.parentNode.insertBefore(g,s);
+            }
 
-        <!-- START PIWIK TRACKING CODE -->
-        <script type="text/javascript">
-            //<![CDATA[
-            var _paq = _paq || [];
-            (function () {
-                var u = "<?php echo $installPath ?>";
-                _paq.push(['setSiteId', <?php echo $siteId ?>]);
-                _paq.push(['setTrackerUrl', u + 'piwik.php']);
-
-                <?php echo $this->getEcommerceCartUpdate()?>
-                <?php echo $this->getOrdersTrackingCode()?>
-                <?php echo $this->getProductPageview()?>
-                <?php echo $this->getCategoryPageview()?>
-
-                <?php if (isset($noRes)): ?>
-                    _paq.push(['setCustomUrl', '' + document.URL + '&search_count=<?php echo $noRes ?>']);
-                <?php endif ?>
-
-                <?php
-                //404
-                if ($action == 'noRoute'): ?>
-                    _paq.push(['setDocumentTitle', '404/URL = ' + String(document.location.pathname + document.location.search).replace(/\//g, "%2f") + '/From = ' + String(document.referrer).replace(/\//g, "%2f")]);
-                <?php endif; ?>
-
-                _paq.push(['trackPageView']);
-                _paq.push(['enableLinkTracking']);
-                var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
-                g.type = 'text/javascript';
-                g.defer = true;
-                g.async = true;
-                g.src = u + 'piwik.js';
-                s.parentNode.insertBefore(g, s);
-            })();
-        </script>
-        <noscript>
-            <p><img src="<?php echo $installPath ?>piwik.php?idsite=<?php echo $siteId ?>" style="border:0" /></p>
-        </noscript>
-        <!-- END PIWIK TRACKING CODE -->
-
-    <?php endif; ?>
-<?php endif; ?>
+            if (window.addEventListener) {
+                window.addEventListener("load", embedTrackingCode, false);
+            } else if (window.attachEvent) {
+                window.attachEvent("onload", embedTrackingCode);
+            } else {
+                embedTrackingCode();
+            }
+        })();
+    </script>
+    <noscript><p><img src="<?= $this->getInstallPath() ?>matomo.php?idsite=<?= $this->getSiteId() ?>&rec=1" style="border:0" alt="" /></p></noscript>
+<?php endif ?>

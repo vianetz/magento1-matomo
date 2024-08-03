@@ -14,9 +14,10 @@
 <config>
     <modules>
         <Matomo_Analytics>
-            <version>1.1.1</version>
+            <version>1.2.0</version>
         </Matomo_Analytics>
     </modules>
+
     <global>
         <models>
             <matomoanalytics>
@@ -34,6 +35,7 @@
             </matomoanalytics>
         </helpers>
     </global>
+
     <frontend>
         <translate>
             <modules>
@@ -70,6 +72,7 @@
             </updates>
         </layout>
     </frontend>
+
     <adminhtml>
         <translate>
             <modules>
@@ -81,15 +84,16 @@
             </modules>
         </translate>
     </adminhtml>
+
     <admin>
         <routers>
-            <Matomo_Analytics>
-                <use>admin</use>
+            <adminhtml>
                 <args>
-                    <module>Matomo_Analytics_Adminhtml</module>
-                    <frontName>matomoanalytics</frontName>
+                    <modules>
+                        <Matomo_Analytics after="Mage_Adminhtml">Matomo_Analytics_Adminhtml</Matomo_Analytics>
+                    </modules>
                 </args>
-            </Matomo_Analytics>
+            </adminhtml>
         </routers>
     </admin>
 </config>

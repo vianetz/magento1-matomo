@@ -18,7 +18,7 @@
                 <matomo translate="title" module="reports">
                     <title>Matomo</title>
                     <sort_order>99999</sort_order>
-                    <action>matomoanalytics/index/index</action>
+                    <action>adminhtml/matomo_index/index</action>
                     <depends>
                         <config>matomo/analytics/active</config>
                     </depends>

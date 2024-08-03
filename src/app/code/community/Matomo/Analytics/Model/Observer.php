@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  *
  * Based on Piwik Extension for Magento created by Adrian Speyer
@@ -10,26 +12,25 @@
  *
  */
 
-class Matomo_Analytics_Model_Observer
+final class Matomo_Analytics_Model_Observer
 {
     /**
      * Add order information into Piwik block to render on checkout success pages
-     *
-     * @param Varien_Event_Observer $observer
      */
-    public function setMatomoAnalyticsOnOrderSuccessPageView(Varien_Event_Observer $observer)
+    public function setMatomoAnalyticsOnOrderSuccessPageView(Varien_Event_Observer $observer): void
     {
-        if (Mage::helper('matomoanalytics')->isEnabled()) {
-            $orderIds = $observer->getEvent()->getOrderIds();
+        if (! Mage::helper('matomoanalytics')->isEnabled()) {
+            return;
+        }
 
-            if (empty($orderIds) || !is_array($orderIds)) {
-                return;
-            }
+        $orderIds = $observer->getEvent()->getOrderIds();
+        if (empty($orderIds) || ! is_array($orderIds)) {
+            return;
+        }
 
-            $block = Mage::app()->getFrontController()->getAction()->getLayout()->getBlock('matomo_script');
-            if ($block) {
-                $block->setOrderIds($orderIds);
-            }
+        $block = Mage::app()->getFrontController()->getAction()->getLayout()->getBlock('matomo_script');
+        if ($block) {
+            $block->setOrderIds($orderIds);
         }
     }
 }
