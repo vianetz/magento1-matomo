@@ -20,7 +20,9 @@
             _paq.push(['setSiteId', <?= $this->getSiteId() ?>]);
             _paq.push(['setTrackerUrl', u + 'matomo.php']);
 
+            <?php if ($this->getRequest()->getRouteName() === 'checkout'): ?>
             <?= $this->getEcommerceCartUpdate() ?>
+            <?php endif ?>
             <?= $this->getOrdersTrackingCode() ?>
             <?= $this->getProductPageview() ?>
             <?= $this->getCategoryPageview() ?>

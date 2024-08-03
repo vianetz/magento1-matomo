@@ -17,7 +17,7 @@ final class Matomo_Analytics_Model_Observer
     /**
      * Add order information into Piwik block to render on checkout success pages
      */
-    public function setMatomoAnalyticsOnOrderSuccessPageView(Varien_Event_Observer $observer)
+    public function setMatomoAnalyticsOnOrderSuccessPageView(Varien_Event_Observer $observer): void
     {
         if (! Mage::helper('matomoanalytics')->isEnabled()) {
             return;

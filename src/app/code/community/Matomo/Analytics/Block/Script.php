@@ -10,6 +10,9 @@ declare(strict_types=1);
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
+/**
+ * @method array<string> getOrderIds()
+ */
 final class Matomo_Analytics_Block_Script extends Mage_Core_Block_Template
 {
     /**
@@ -40,22 +43,6 @@ final class Matomo_Analytics_Block_Script extends Mage_Core_Block_Template
         foreach ($collection as $order) {
             /** @var Mage_Sales_Model_Order_Item $item */
             foreach ($order->getAllVisibleItems() as $item) {
-
-                //get category name
-                $productId = $item->product_id;
-
-                /** @var Mage_Catalog_Model_Product $product */
-                $product = Mage::getModel('catalog/product')->load($productId);
-                $categoryName = '';
-                $categoryIds = $product->getCategoryIds();
-
-                if (!empty($categoryIds)) {
-                    $categoryId = $categoryIds[0];
-                    /** @var Mage_Catalog_Model_Category $category */
-                    $category = Mage::getModel('catalog/category')->load($categoryId);
-                    $categoryName = $category->getName();
-                }
-
                 if ($item->getQtyOrdered()) {
                     $qty = number_format((float)$item->getQtyOrdered(), 0, '.', '');
                 } else {
@@ -64,11 +51,10 @@ final class Matomo_Analytics_Block_Script extends Mage_Core_Block_Template
                 $result[] = sprintf('_paq.push([\'addEcommerceItem\', \'%s\', \'%s\', \'%s\', %s, %s]);',
                     $this->jsQuoteEscape($item->getSku()),
                     $this->jsQuoteEscape($item->getName()),
-                    $categoryName,
+                    $this->getFirstCategoryName($item->getProductId()),
                     $item->getBasePrice(),
                     $qty
                 );
-
             }
 
             if ($order->getGrandTotal()) {
@@ -97,37 +83,22 @@ final class Matomo_Analytics_Block_Script extends Mage_Core_Block_Template
 
         /** @var Mage_Checkout_Model_Cart $cart */
         $cart = Mage::getModel('checkout/cart');
-        /** @var Mage_Sales_Model_Quote $quote */
         $quote = $cart->getQuote();
 
         /** @var Mage_Sales_Model_Quote_Item $cartItem */
         foreach ($quote->getAllVisibleItems() as $cartItem) {
-
-            //get category name
-            $productId = $cartItem->product_id;
-
-            /** @var Mage_Catalog_Model_Product $product */
-            $product = Mage::getModel('catalog/product')->load($productId);
-            $categoryName = '';
-            $categoryIds = $product->getCategoryIds();
-            if (!empty($categoryIds)) {
-                $categoryId = $categoryIds[0];
-                /** @var Mage_Catalog_Model_Category $category */
-                $category = Mage::getModel('catalog/category')->load($categoryId);
-                $categoryName = $category->getName();
-            }
             $productName = $cartItem->getName();
             $productName = str_replace('"', "", $productName);
 
-            if ($cartItem->getPrice() == 0 || $cartItem->getPrice() < 0.00001):
+            if ($cartItem->getPrice() == 0 || $cartItem->getPrice() < 0.00001) {
                 continue;
-            endif;
+            }
 
             $result[] = sprintf(
                 "_paq.push(['addEcommerceItem', '%s', '%s', '%s', %s, %s]);",
                 $this->jsQuoteEscape($cartItem->getSku()),
                 $this->jsQuoteEscape($productName),
-                $categoryName,
+                $this->getFirstCategoryName($cartItem->getProductId()),
                 $cartItem->getPrice(),
                 $cartItem->getQty()
             );
@@ -152,21 +123,11 @@ final class Matomo_Analytics_Block_Script extends Mage_Core_Block_Template
         $product = Mage::registry('current_product');
 
         if ($product instanceof Mage_Catalog_Model_Product) {
-            $categoryName = '';
-            $categoryIds = $product->getCategoryIds();
-            if (!empty($categoryIds)) {
-                $categoryId = $categoryIds[0];
-                /** @var Mage_Catalog_Model_Category $category */
-                $category = Mage::getModel('catalog/category')->load($categoryId);
-                $categoryName = $category->getName();
-            }
-            $productName = $product->getName();
-
             return sprintf(
                 "_paq.push(['setEcommerceView', '%s', '%s', '%s', %s]);",
                 $this->jsQuoteEscape($product->getSku()),
-                $this->jsQuoteEscape($productName),
-                $categoryName,
+                $this->jsQuoteEscape($product->getName()),
+                $this->getFirstCategoryName((int)$product->getId()),
                 $product->getFinalPrice()
             );
         }
@@ -204,17 +165,17 @@ final class Matomo_Analytics_Block_Script extends Mage_Core_Block_Template
 
     public function getSearchResultCount(): int
     {
-        $count = 0;
-
-        if ($this->getRequest()->getControllerName() === 'result') {
-            $queryText = $this->helper('catalogsearch')->getQuery()->getQueryText();
-            $count = (int)$this->helper('catalogsearch')->getEngine()
-                ->getResultCollection()
-                ->addSearchFilter($queryText)
-                ->getSize();
+        if ($this->getRequest()->getControllerName() !== 'result') {
+            return 0;
         }
 
-        return $count;
+        $queryText = $this->helper('catalogsearch')->getQuery()->getQueryText();
+        /** @var \Mage_CatalogSearch_Model_Resource_Fulltext_Engine $engine */
+        $engine = $this->helper('catalogsearch')->getEngine();
+
+        return $engine->getResultCollection()
+            ->addSearchFilter($queryText)
+            ->getSize();
     }
 
     public function is404(): bool
@@ -229,5 +190,22 @@ final class Matomo_Analytics_Block_Script extends Mage_Core_Block_Template
         }
 
         return parent::_toHtml();
+    }
+
+    private function getFirstCategoryName(int $productId): string
+    {
+        /** @var Mage_Catalog_Model_Product $product */
+        $product = Mage::getModel('catalog/product')->load($productId);
+
+        $categoryIds = $product->getCategoryIds();
+        if (empty($categoryIds)) {
+            return '';
+        }
+
+        $categoryId = $categoryIds[0];
+        /** @var Mage_Catalog_Model_Category $category */
+        $category = Mage::getModel('catalog/category')->load($categoryId);
+
+        return $category->getName();
     }
 }

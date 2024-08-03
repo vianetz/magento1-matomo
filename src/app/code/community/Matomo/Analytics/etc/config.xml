@@ -87,13 +87,13 @@
 
     <admin>
         <routers>
-            <Matomo_Analytics>
-                <use>admin</use>
+            <adminhtml>
                 <args>
-                    <module>Matomo_Analytics_Adminhtml</module>
-                    <frontName>matomoanalytics</frontName>
+                    <modules>
+                        <Matomo_Analytics after="Mage_Adminhtml">Matomo_Analytics_Adminhtml</Matomo_Analytics>
+                    </modules>
                 </args>
-            </Matomo_Analytics>
+            </adminhtml>
         </routers>
     </admin>
 </config>
