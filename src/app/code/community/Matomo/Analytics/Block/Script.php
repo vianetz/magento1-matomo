@@ -49,7 +49,7 @@ final class Matomo_Analytics_Block_Script extends Mage_Core_Block_Template
                 $result[] = sprintf('_paq.push([\'addEcommerceItem\', \'%s\', \'%s\', \'%s\', %s, %s]);',
                     $this->jsQuoteEscape($item->getSku()),
                     $this->jsQuoteEscape($item->getName()),
-                    $this->getFirstCategoryName($item->getProductId()),
+                    $this->getFirstCategoryName((int)$item->getProductId()),
                     $item->getBasePrice(),
                     $qty
                 );
@@ -96,7 +96,7 @@ final class Matomo_Analytics_Block_Script extends Mage_Core_Block_Template
                 "_paq.push(['addEcommerceItem', '%s', '%s', '%s', %s, %s]);",
                 $this->jsQuoteEscape($cartItem->getSku()),
                 $this->jsQuoteEscape($productName),
-                $this->getFirstCategoryName($cartItem->getProductId()),
+                $this->getFirstCategoryName((int)$cartItem->getProductId()),
                 $cartItem->getPrice(),
                 $cartItem->getQty()
             );
